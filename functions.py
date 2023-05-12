@@ -1,18 +1,18 @@
 import json
 import requests
 
-# DataRepositoryService get ok access ok
+# DataRepositoryService 
 get_url =  'http://172.27.46.118:8080/ga4gh/drs/v1/objects/'
 access_url = 'http://172.27.46.118:8080/ga4gh/drs/v1/objects/'
 
-# DRS-Filer post ok put ok delete ok post info ok
+# DRS-Filer 
 post_url = 'http://172.27.46.118:8080/ga4gh/drs/v1/objects'
 delete_url = 'http://172.27.46.118:8080/ga4gh/drs/v1/objects/'
 put_url = 'http://172.27.46.118:8080/ga4gh/drs/v1/objects/'
 delete_access_url = 'http://172.27.46.118:8080/ga4gh/drs/v1/objects/'
 post_info_url = 'http://172.27.46.118:8080/ga4gh/drs/v1/service-info'
 
-# service-info --ok
+# service-info
 get_info_url = 'http://172.27.46.118:8080/ga4gh/drs/v1/service-info'
 
 

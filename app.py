@@ -84,7 +84,7 @@ def main():
    # Parse command-line arguments 
     args = parser.parse_args()
 
-    # Call the appropriate function based on the chosen action
+    # Call the appropriate function based on the chosen action.
     if args.action == "post":
         functions.post_function(access_url_headers=args.access_url_headers, access_url=args.access_url, access_type=args.access_type, aliases=args.aliases,
         checksum=args.checksum,checksum_type=args.checksum_type, drs_uri=args.drs_uri, contents_id=args.contents_id,contents_name=args.contents_name,
