@@ -48,25 +48,40 @@ Consequently, the base URL would change to
 `base_url = "http://172.27.46.118:8081/ga4gh/drs/v1/objects"`
 
 4. Once the server is up and running, you can start using the app. For ease of testing, follow these steps: 
+
 (1) post call: `python3 app.py post` (this call will return a drs object id, e.g. 12345)
+
 (2) get call: `python3 app.py get --id 12345` (you can find the access id from this call, e.g. 0000)
+
 (3) access call: `python3 app.py access --id 12345, --access_id 0000` (this will return an access url)
+
 (4)put call: `python3 app.py put --id 1234 --(any argument you would like to update)`
+
 (5) delete call:`python3 app.py delete --id 1234`
+
 (6) delete_access call: `python3 app.py delete --id 1234 --access_id 0000` (Note: this call does not work on the server side)
+
 (7) post_service_info: `python3 app.py post_service_info --description your info`
+
 (8) get_service_info: `python3 app.py get_service_info`
 
 ## Usage 
 Below is a description of all the actions available in the command-line client:
 
 `post` - Register metadata of a data object.
+
 `get` - Returns object metadata, and a list of access methods that can be used to fetch object bytes
+
 `delete` - Delete existing DrsObject
+
 `delete_access` - Delete existing AccessMethod of DrsObject.
+
 `put` - Create a DRS object with a predefined ID. Overwrites any existing DRS object with the same ID.
+
 `access` - Returns a URL that can be used to fetch the bytes of a DrsObject. This method only needs to be called when using an AccessMethod that contains an access_id (e.g., for servers that use signed URLs for fetching object bytes).
+
 `post_service_info` - Delete existing AccessMethod of DrsObject.
+
 `get_service_info` - A successful operation to request the service information about this running service.
 
 The development is ongoing, with more functions and features being added. Therefore, this README is also a work in progress. 
