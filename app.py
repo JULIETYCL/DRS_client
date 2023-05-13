@@ -8,7 +8,7 @@ def main():
     subparsers = parser.add_subparsers(dest="action")
 
     # DataRepositoryService
-    # 1. GET action arguments
+    # GET action arguments
     get_parser = subparsers.add_parser("get", help="Get an item")
     # Add arguments for the get action
     get_parser.add_argument("--id", type=str, required=True, help="ID of the item")
@@ -19,7 +19,7 @@ def main():
         default=False,
     )
 
-    # 2. ACCESS action arguments
+    # ACCESS action arguments
     access_parser = subparsers.add_parser(
         "access",
         help="access the URL that can be used to fetch the bytes of a DrsObject",
@@ -31,7 +31,7 @@ def main():
     )
 
     # DRS-Filer
-    # 3. POST action arguments
+    # POST action arguments
     post_parser = subparsers.add_parser("post", help="Post an item")
     # Add arguments for the post action
     post_parser.add_argument(
@@ -237,7 +237,7 @@ def main():
 
     # service-info
 
-    # 8. get service info
+    # get service info
     get_service_parser = subparsers.add_parser(
         "get_service_info", help="Get service information"
     )
