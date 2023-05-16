@@ -70,11 +70,11 @@ def main():
     )
     post_parser.add_argument("--version", type=str, default="string", help="Version (default: 'string')")
 
-    # 4. DELETE action arguments
+    # DELETE action arguments
     delete_parser = subparsers.add_parser("delete", help="delete an item")
     delete_parser.add_argument("--id", type=str, required=True, help="ID of the item")
 
-    # 5. PUT action arguments
+    # PUT action arguments
     put_parser = subparsers.add_parser("put", help="update an item")
     put_parser.add_argument("--id", type=str, required=True, help="ID of the item")
     put_parser.add_argument(
@@ -119,12 +119,12 @@ def main():
     )
     put_parser.add_argument("--version", type=str, default="string", help="Version (default: 'string')")
 
-    # 6. Delete access url
+    # Delete access url
     delete_access_parser = subparsers.add_parser("delete_access", help="Delete existing AccessMethod of DrsObject")
     delete_access_parser.add_argument("--id", type=str, required=True, help="id of the item")
     delete_access_parser.add_argument("--access_id", type=str, required=True, help="access id of the item")
 
-    # 7. POST SERVICE INFO action arguments
+    # POST SERVICE INFO action arguments
     post_info_parser = subparsers.add_parser("post_service_info", help="Post service information")
     post_info_parser.add_argument("--contact_url", type=str, default="string", help="contact URL (default: 'string')")
     post_info_parser.add_argument("--description", type=str, default="string", help="Description (default: 'string')")

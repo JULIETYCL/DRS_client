@@ -6,7 +6,6 @@ base_url = "http://172.27.46.118:8080/ga4gh/drs/v1/objects"
 base_info_url = "http://172.27.46.118:8080/ga4gh/drs/v1/service-info"
 
 
-# Post
 def post_function(
     access_url_headers=["string"],
     access_url="string",
@@ -57,7 +56,6 @@ def post_function(
     return res
 
 
-# Get
 def get_function(id, expand):
     response = requests.get(f"{base_url}/{id}?expand={expand}")
     if response.status_code == 200:
