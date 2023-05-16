@@ -1,11 +1,12 @@
 import json
-import requests
 
+import requests
 
 base_url = "http://172.27.46.118:8080/ga4gh/drs/v1/objects"
 base_info_url = "http://172.27.46.118:8080/ga4gh/drs/v1/service-info"
 
-#Post
+
+# Post
 def post_function(
     access_url_headers=["string"],
     access_url="string",
@@ -34,14 +35,7 @@ def post_function(
         ],
         "aliases": aliases,
         "checksums": [{"checksum": checksum, "type": checksum_type}],
-        "contents": [
-            {
-                "contents": [],
-                "drs_uri": drs_uri,
-                "id": contents_id,
-                "name": contents_name,
-            }
-        ],
+        "contents": [{"contents": [], "drs_uri": drs_uri, "id": contents_id, "name": contents_name}],
         "created_time": created_time,
         "description": description,
         "mime_type": mime_type,
@@ -53,9 +47,7 @@ def post_function(
 
     headers = {"Content-Type": "application/json"}
 
-    response = requests.post(
-        base_url, data=json.dumps(drs_object_register), headers=headers
-    )
+    response = requests.post(base_url, data=json.dumps(drs_object_register), headers=headers)
 
     if response.status_code == 200:
         print("DrsObjectRegister created successfully!")
@@ -64,7 +56,8 @@ def post_function(
         res = print(f"Error: {response.status_code} - {response.text}")
     return res
 
-#Get
+
+# Get
 def get_function(id, expand):
     response = requests.get(f"{base_url}/{id}?expand={expand}")
     if response.status_code == 200:
@@ -110,9 +103,7 @@ def put_function(
         ],
         "aliases": aliases,
         "checksums": [{"checksum": checksum, "type": checksum_type}],
-        "contents": [
-            {"contents": [], "drs_uri": drs_uri, "id": id, "name": contents_name}
-        ],
+        "contents": [{"contents": [], "drs_uri": drs_uri, "id": id, "name": contents_name}],
         "created_time": created_time,
         "description": description,
         "mime_type": mime_type,
@@ -124,9 +115,7 @@ def put_function(
 
     headers = {"Content-Type": "application/json"}
 
-    response = requests.put(
-        f"{base_url}/{id}", data=json.dumps(drs_object_register), headers=headers
-    )
+    response = requests.put(f"{base_url}/{id}", data=json.dumps(drs_object_register), headers=headers)
 
     if response.status_code == 200:
         print("DrsObject is updated successfully!")
@@ -145,9 +134,7 @@ def access_function(id, access_id):
 
 
 def post_info_function(
-    contactUrl="mailto:support@example.com",
-    createdAt="2019-06-04T12:58:19Z",
-    description="This service provides...",
+    contactUrl="mailto:support@example.com", createdAt="2019-06-04T12:58:19Z", description="This service provides..."
 ):
     service_info = {
         "contactUrl": contactUrl,
@@ -165,9 +152,7 @@ def post_info_function(
 
     headers = {"Content-Type": "application/json"}
 
-    response = requests.post(
-        base_info_url, data=json.dumps(service_info), headers=headers
-    )
+    response = requests.post(base_info_url, data=json.dumps(service_info), headers=headers)
 
     if response.status_code == 201:
         res = print("Service information created successfully!")
