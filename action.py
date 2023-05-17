@@ -1,11 +1,11 @@
 import json
 
-import requests
-
 import click
+import requests
 
 base_url = "http://172.27.46.118:8080/ga4gh/drs/v1/objects"
 base_info_url = "http://172.27.46.118:8080/ga4gh/drs/v1/service-info"
+
 
 @click.group()
 def cli():
@@ -14,23 +14,29 @@ def cli():
 
 
 @click.command()
-@click.help_option('-h', '--help')
-@click.option('--access-url-headers', default=["string"], type=str, multiple=True, help='Access URL Headers')
-@click.option('--access-url', default="string", help='Access URL')
-@click.option('--access-type', default="s3", help='Access Type')
-@click.option('--aliases', default=["string"], type=str, multiple=True, help='Aliases')
-@click.option('--checksum', default="string", help='Checksum')
-@click.option('--checksum-type', default="sha-256", help='Checksum Type')
-@click.option('--drs-uri', default=["drs://drs.example.org/314159", "drs://drs.example.org/213512"], type=str, multiple=True, help='DRS URI')
-@click.option('--contents-id', default="string", help='Contents ID')
-@click.option('--contents-name', default="string", help='Contents Name')
-@click.option('--created-time', default="2023-04-16T18:56:55.077Z", help='Created Time')
-@click.option('--description', default="string", help='Description')
-@click.option('--mime-type', default="application/json", help='MIME Type')
-@click.option('--name', default="string", help='Name')
-@click.option('--size', default=0, help='Size')
-@click.option('--updated-time', default="2023-04-16T18:56:55.077Z", help='Updated Time')
-@click.option('--version', default="string", help='Version')
+@click.help_option("-h", "--help")
+@click.option("--access-url-headers", default=["string"], type=str, multiple=True, help="Access URL Headers")
+@click.option("--access-url", default="string", help="Access URL")
+@click.option("--access-type", default="s3", help="Access Type")
+@click.option("--aliases", default=["string"], type=str, multiple=True, help="Aliases")
+@click.option("--checksum", default="string", help="Checksum")
+@click.option("--checksum-type", default="sha-256", help="Checksum Type")
+@click.option(
+    "--drs-uri",
+    default=["drs://drs.example.org/314159", "drs://drs.example.org/213512"],
+    type=str,
+    multiple=True,
+    help="DRS URI",
+)
+@click.option("--contents-id", default="string", help="Contents ID")
+@click.option("--contents-name", default="string", help="Contents Name")
+@click.option("--created-time", default="2023-04-16T18:56:55.077Z", help="Created Time")
+@click.option("--description", default="string", help="Description")
+@click.option("--mime-type", default="application/json", help="MIME Type")
+@click.option("--name", default="string", help="Name")
+@click.option("--size", default=0, help="Size")
+@click.option("--updated-time", default="2023-04-16T18:56:55.077Z", help="Updated Time")
+@click.option("--version", default="string", help="Version")
 def post(
     access_url_headers,
     access_url,
@@ -47,7 +53,8 @@ def post(
     name,
     size,
     updated_time,
-    version,):
+    version,
+):
     """Post an item"""
     drs_object_register = {
         "access_methods": [
@@ -80,10 +87,11 @@ def post(
         res = print(f"Error: {response.status_code} - {response.text}")
     return res
 
+
 @click.command()
-@click.help_option('-h', '--help')
-@click.option('--expand', default = False, help="true or false (default: false)" )
-@click.argument('id')
+@click.help_option("-h", "--help")
+@click.option("--expand", default=False, help="true or false (default: false)")
+@click.argument("id")
 def get(id, expand):
     """Get an item"""
     response = requests.get(f"{base_url}/{id}?expand={expand}")
@@ -94,8 +102,8 @@ def get(id, expand):
 
 
 @click.command()
-@click.help_option('-h', '--help')
-@click.argument('id', help = "ID of the item")
+@click.help_option("-h", "--help")
+@click.argument("id", help="ID of the item")
 def delete(id):
     """Get an item"""
     response = requests.delete(f"{base_url}/{id}")
@@ -105,24 +113,31 @@ def delete(id):
         print(drs_object)
         return drs_object
 
+
 @click.command()
-@click.help_option('-h','--help')
-@click.option('--access-url-headers', default=["string"], type=str, multiple=True, help='Access URL Headers')
-@click.option('--access-url', default="string", help='Access URL')
-@click.option('--access-type', default="s3", help='Access Type')
-@click.option('--aliases', default=["string"], type=str, multiple=True, help='Aliases')
-@click.option('--checksum', default="string", help='Checksum')
-@click.option('--checksum-type', default="sha-256", help='Checksum Type')
-@click.option('--drs-uri', default=["drs://drs.example.org/314159", "drs://drs.example.org/213512"], type=str, multiple=True, help='DRS URI')
-@click.option('--contents-name', default="string", help='Contents Name')
-@click.option('--created-time', default="2023-04-16T18:56:55.077Z", help='Created Time')
-@click.option('--description', default="string", help='Description')
-@click.option('--mime-type', default="application/json", help='MIME Type')
-@click.option('--name', default="string", help='Name')
-@click.option('--size', default=0, help='Size')
-@click.option('--updated-time', default="2023-04-16T18:56:55.077Z", help='Updated Time')
-@click.option('--version', default="string", help='Version')
-@click.argument('id')
+@click.help_option("-h", "--help")
+@click.option("--access-url-headers", default=["string"], type=str, multiple=True, help="Access URL Headers")
+@click.option("--access-url", default="string", help="Access URL")
+@click.option("--access-type", default="s3", help="Access Type")
+@click.option("--aliases", default=["string"], type=str, multiple=True, help="Aliases")
+@click.option("--checksum", default="string", help="Checksum")
+@click.option("--checksum-type", default="sha-256", help="Checksum Type")
+@click.option(
+    "--drs-uri",
+    default=["drs://drs.example.org/314159", "drs://drs.example.org/213512"],
+    type=str,
+    multiple=True,
+    help="DRS URI",
+)
+@click.option("--contents-name", default="string", help="Contents Name")
+@click.option("--created-time", default="2023-04-16T18:56:55.077Z", help="Created Time")
+@click.option("--description", default="string", help="Description")
+@click.option("--mime-type", default="application/json", help="MIME Type")
+@click.option("--name", default="string", help="Name")
+@click.option("--size", default=0, help="Size")
+@click.option("--updated-time", default="2023-04-16T18:56:55.077Z", help="Updated Time")
+@click.option("--version", default="string", help="Version")
+@click.argument("id")
 def put(
     id,
     access_url_headers,
@@ -173,10 +188,11 @@ def put(
         res = print(f"Error: {response.status_code} - {response.text}")
     return res
 
+
 @click.command()
-@click.help_option('-h','--help')
-@click.argument('id', type=str, help="ID of the item")
-@click.argument('access_id',type=str, help="ID of the item")
+@click.help_option("-h", "--help")
+@click.argument("id", type=str, help="ID of the item")
+@click.argument("access_id", type=str, help="ID of the item")
 def access(id, access_id):
     """access the URL that can be used to fetch the bytes of a DrsObject"""
     response = requests.get(f"{base_url}/{id}/access/{access_id}")
@@ -187,13 +203,11 @@ def access(id, access_id):
 
 
 @click.command()
-@click.help_option('-h', '--help')
-@click.option('--contact-url', default="mailto:support@example.com", help='Contact URL')
-@click.option('--created-at', default="2019-06-04T12:58:19Z", help='Created At')
-@click.option('--description', default="This service provides...", help='Description')
-def post_info(
-    contactUrl, createdAt, description
-):
+@click.help_option("-h", "--help")
+@click.option("--contact-url", default="mailto:support@example.com", help="Contact URL")
+@click.option("--created-at", default="2019-06-04T12:58:19Z", help="Created At")
+@click.option("--description", default="This service provides...", help="Description")
+def post_info(contactUrl, createdAt, description):
     """post service information"""
     service_info = {
         "contactUrl": contactUrl,
@@ -219,8 +233,9 @@ def post_info(
         res = print(f"Error: {response.status_code} - {response.text}")
     return res
 
+
 @click.command()
-@click.help_option('-h','--help')
+@click.help_option("-h", "--help")
 def get_info():
     """Get service information"""
     response = requests.get(base_info_url)
@@ -229,10 +244,11 @@ def get_info():
         print(drs_object)
         return drs_object
 
+
 @click.command()
-@click.help_option('-h','--help')
-@click.argument('id', type=str, help="id of the item")
-@click.argument('access_id', type=str, help="access id of the item")
+@click.help_option("-h", "--help")
+@click.argument("id", type=str, help="id of the item")
+@click.argument("access_id", type=str, help="access id of the item")
 def delete_access_id(id, access_id):
     """Delete existing AccessMethod of DrsObject"""
     response = requests.delete(f"{base_url}/{id}/access/{access_id}")
