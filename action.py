@@ -103,9 +103,9 @@ def get(id, expand):
 
 @click.command()
 @click.help_option("-h", "--help")
-@click.argument("id", help="ID of the item")
+@click.argument("id")
 def delete(id):
-    """Get an item"""
+    """Delete an item"""
     response = requests.delete(f"{base_url}/{id}")
     if response.status_code == 200:
         print("drs object is deleted")
@@ -191,8 +191,8 @@ def put(
 
 @click.command()
 @click.help_option("-h", "--help")
-@click.argument("id", type=str, help="ID of the item")
-@click.argument("access_id", type=str, help="ID of the item")
+@click.argument("id", type=str)
+@click.argument("access_id", type=str)
 def access(id, access_id):
     """access the URL that can be used to fetch the bytes of a DrsObject"""
     response = requests.get(f"{base_url}/{id}/access/{access_id}")
@@ -247,8 +247,8 @@ def get_info():
 
 @click.command()
 @click.help_option("-h", "--help")
-@click.argument("id", type=str, help="id of the item")
-@click.argument("access_id", type=str, help="access id of the item")
+@click.argument("id", type=str)
+@click.argument("access_id", type=str)
 def delete_access_id(id, access_id):
     """Delete existing AccessMethod of DrsObject"""
     response = requests.delete(f"{base_url}/{id}/access/{access_id}")
