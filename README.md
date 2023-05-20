@@ -49,7 +49,7 @@ Consequently, the base URL would change to
 
 4. Once the server is up and running, you can start using the app. For ease of testing, follow these steps: 
 
-(1) post call: `python3 app.py post` (this call will return a drs object id, e.g. 12345)
+(1) post call: `action post` (this call will return a drs object id, e.g. 12345)
 
 (2) get call: `python3 app.py get --id 12345` (you can find the access id from this call, e.g. 0000)
 
