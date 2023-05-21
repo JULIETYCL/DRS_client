@@ -49,21 +49,21 @@ Consequently, the base URL would change to
 
 4. Once the server is up and running, you can start using the app. For ease of testing, follow these steps: 
 
-(1) post call: `action post` (this call will return a drs object id, e.g. 12345)
+(1) post call: `action post` (this call will return a drs object id, e.g. `12345`)
 
-(2) get call: `python3 app.py get --id 12345` (you can find the access id from this call, e.g. 0000)
+(2) get call: `action get 12345` (`1234` is the obj id, you can find the access id from this call, e.g. 0000)
 
-(3) access call: `python3 app.py access --id 12345, --access_id 0000` (this will return an access url)
+(3) access call: `action access 12345, access_id 0000` (this will return an access url)
 
-(4)put call: `python3 app.py put --id 1234 --(any argument you would like to update)`
+(4)put call: `action put 1234 --(any argument you would like to update)`
 
-(5) delete call:`python3 app.py delete --id 1234`
+(5) delete call:`action delete 1234`
 
-(6) delete_access call: `python3 app.py delete --id 1234 --access_id 0000` (Note: this call does not work on the server side)
+(6) delete_access call: `action delete 1234 access_id 0000` (Note: this call does not work on the server side)
 
-(7) post_service_info: `python3 app.py post_service_info --description your info`
+(7) post_service_info: `action post_service_info --description your info`
 
-(8) get_service_info: `python3 app.py get_service_info`
+(8) get_service_info: `action get_service_info`
 
 ## Usage 
 Below is a description of all the actions available in the command-line client:

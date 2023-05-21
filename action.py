@@ -1,10 +1,9 @@
-import json
-
 import click
+import json
 import requests
 
-base_url = "http://172.27.46.118:8080/ga4gh/drs/v1/objects"
-base_info_url = "http://172.27.46.118:8080/ga4gh/drs/v1/service-info"
+base_url = "http://172.20.144.25:8080/ga4gh/drs/v1/objects"
+base_info_url = "http://172.20.144.25:8080/ga4gh/drs/v1/service-info"
 
 
 @click.group()
@@ -13,7 +12,7 @@ def cli():
     pass
 
 
-@click.command()
+@cli.command("post")
 @click.help_option("-h", "--help")
 @click.option("--access-url-headers", default=["string"], type=str, multiple=True, help="Access URL Headers")
 @click.option("--access-url", default="string", help="Access URL")
@@ -79,16 +78,15 @@ def post(
     headers = {"Content-Type": "application/json"}
 
     response = requests.post(base_url, data=json.dumps(drs_object_register), headers=headers)
-
     if response.status_code == 200:
-        print("DrsObjectRegister created successfully!")
-        res = print(json.loads(response.text))
+        click.secho("DrsObjectRegister created successfully!", fg = "red")
+        res = click.echo(json.loads(response.text))
     else:
-        res = print(f"Error: {response.status_code} - {response.text}")
+        res = click.secho(f"Error: {response.status_code} - {response.text}", fg = "red")
     return res
 
 
-@click.command()
+@cli.command("get")
 @click.help_option("-h", "--help")
 @click.option("--expand", default=False, help="true or false (default: false)")
 @click.argument("id")
@@ -97,24 +95,26 @@ def get(id, expand):
     response = requests.get(f"{base_url}/{id}?expand={expand}")
     if response.status_code == 200:
         drs_object = response.json()
-        print(drs_object)
+        for key, value in drs_object.items():
+            click.secho(f'{key}:', fg = 'green',nl = False)
+            click.secho(f'{value}',fg = 'yellow')
         return drs_object
 
 
-@click.command()
+@cli.command("delete")
 @click.help_option("-h", "--help")
 @click.argument("id")
 def delete(id):
     """Delete an item"""
     response = requests.delete(f"{base_url}/{id}")
     if response.status_code == 200:
-        print("drs object is deleted")
+        click.secho("drs object is deleted",fg = "red")
         drs_object = response.json()
-        print(drs_object)
+        click.secho(f'{drs_object}',fg ="white")
         return drs_object
 
 
-@click.command()
+@cli.command("put")
 @click.help_option("-h", "--help")
 @click.option("--access-url-headers", default=["string"], type=str, multiple=True, help="Access URL Headers")
 @click.option("--access-url", default="string", help="Access URL")
@@ -182,14 +182,14 @@ def put(
     response = requests.put(f"{base_url}/{id}", data=json.dumps(drs_object_register), headers=headers)
 
     if response.status_code == 200:
-        print("DrsObject is updated successfully!")
-        res = print(json.loads(response.text))
+        click.secho("DrsObject is updated successfully!",fg ="green")
+        res = click.echo(json.loads(response.text))
     else:
-        res = print(f"Error: {response.status_code} - {response.text}")
+        res = click.secho(f"Error: {response.status_code} - {response.text}", fg = "red")
     return res
 
 
-@click.command()
+@cli.command("access")
 @click.help_option("-h", "--help")
 @click.argument("id", type=str)
 @click.argument("access_id", type=str)
@@ -198,11 +198,11 @@ def access(id, access_id):
     response = requests.get(f"{base_url}/{id}/access/{access_id}")
     if response.status_code == 200:
         obj_url = response.json()
-        print(obj_url)
+        click.secho(f'{obj_url}', fg = "yellow")
         return obj_url
 
 
-@click.command()
+@cli.command("post_info")
 @click.help_option("-h", "--help")
 @click.option("--contact-url", default="mailto:support@example.com", help="Contact URL")
 @click.option("--created-at", default="2019-06-04T12:58:19Z", help="Created At")
@@ -228,24 +228,24 @@ def post_info(contactUrl, createdAt, description):
     response = requests.post(base_info_url, data=json.dumps(service_info), headers=headers)
 
     if response.status_code == 201:
-        res = print("Service information created successfully!")
+        res = click.secho("Service information created successfully!", fg = "green")
     else:
-        res = print(f"Error: {response.status_code} - {response.text}")
+        res = click.secho(f"Error: {response.status_code} - {response.text}", fg = "red")
     return res
 
 
-@click.command()
+@cli.command("get_info")
 @click.help_option("-h", "--help")
 def get_info():
     """Get service information"""
     response = requests.get(base_info_url)
     if response.status_code == 200:
         drs_object = response.json()
-        print(drs_object)
+        click.echo(drs_object)
         return drs_object
 
 
-@click.command()
+@cli.command("delete_access_id")
 @click.help_option("-h", "--help")
 @click.argument("id", type=str)
 @click.argument("access_id", type=str)
@@ -254,9 +254,9 @@ def delete_access_id(id, access_id):
     response = requests.delete(f"{base_url}/{id}/access/{access_id}")
     if response.status_code == 200:
         drs_response = response.json()
-        print("drs object and access is deleted")
+        click.secho("drs object and access is deleted", fg = "red")
         return drs_response
     elif response.status_code in [400, 401, 403, 404, 500]:
         drs_response = response.json()
-        print("action is not successful, 400")
+        click.secho("action is not successful, 400", fg = "red")
         return drs_response
