@@ -1,18 +1,13 @@
 import click
 import json
 import requests
+import subprocess
 
-@click.group("cli")
-@click.option("--url",default = "172.19.99.130", help = "IP address of the Ubuntu instance")
-@click.option("--port", default = "8080", help = "Port number of the server")
+@click.group()
 @click.pass_context
-def cli(ctx, url, port):
+def cli(ctx):
     """These are the commands for managing items"""
     ctx.ensure_object(dict)
-    base_url = f"http://{url}:{port}/ga4gh/drs/v1/objects"
-    ctx.obj["BASE_URL"] = base_url
-    ctx.obj["BASE_INFO_URL"] = base_url.replace("object", "service-info")
-
 
 @cli.command("post")
 @click.pass_context
@@ -213,13 +208,13 @@ def access(ctx, id, access_id):
 
 @cli.command("post_info")
 @click.pass_context
-@click.option("--contact-url", default="mailto:support@example.com", help="Contact URL")
-@click.option("--created-at", default="2019-06-04T12:58:19Z", help="Created At")
-@click.argument("description", default="This service provides...")
-def post_info(ctx, contactUrl, createdAt, description):
+@click.option("--contactURL", default="mailto:support@example.com", help="Contact URL")
+@click.option("--createdAt", default="2019-06-04T12:58:19Z", help="Created At")
+@click.option("--description", default="This service provides...")
+def post_info(ctx, contactURL, createdAt, description):
     """post service information"""
     service_info = {
-        "contactUrl": contactUrl,
+        "contactUrl": contactURL,
         "createdAt": createdAt,
         "description": description,
         "documentationUrl": "https://docs.myservice.example.com",
@@ -249,7 +244,7 @@ def post_info(ctx, contactUrl, createdAt, description):
 @click.pass_context
 def get_info(ctx):
     """Get service information"""
-    base_info_url = ctx.object["BASE_INFO_URL"]
+    base_info_url = ctx.obj["BASE_INFO_URL"]
     response = requests.get(base_info_url)
     if response.status_code == 200:
         drs_object = response.json()
@@ -274,8 +269,21 @@ def delete_access_id(ctx, id, access_id):
         click.secho("action is not successful, 400", fg = "red")
         return drs_response
 
+
+    
+
+
 def main():
-   cli(prog_name="cli")
+    command = "ip addr show eth0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}'"
+    result = subprocess.run(command, shell=True, capture_output=True, text=True)
+    ip_address = result.stdout.strip()
+    port = "8080"
+    ctx = click.Context(cli,obj={})
+    base_url = f"http://{ip_address}:{port}/ga4gh/drs/v1/objects"
+    base_info_url = f"http://{ip_address}:{port}/ga4gh/drs/v1/service-info"
+    ctx.obj["BASE_URL"] = base_url
+    ctx.obj["BASE_INFO_URL"] = base_info_url
+    cli(obj=ctx.obj)
  
 if __name__ == '__main__':
    main()

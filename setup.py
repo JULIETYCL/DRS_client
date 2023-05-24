@@ -1,9 +1,9 @@
 from setuptools import setup
 
-setup(
-    name="action",
+setup(  
+    name="drs",
     version="0.1",
-    py_modules=["action"],
-    install_requires=["Click", "requests", "json"],
-    entry_points={"console_scripts": ["action = action:cli"]},
+    py_modules=["drs"],
+    install_requires=["Click", "requests", "subprocess"],
+    entry_points={"console_scripts": ["drs = drs:main"]},
 )
