@@ -23,12 +23,8 @@ If successful, ascertain the IP address for the WSL2 instance with:
 ip addr show eth0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}' 
 ```
 
-In my case, the IP address is 172.27.46.118, leading to base_url and base_info_url in the functions.py file as shown below. Replace the IP address with your own:
+In my case, the IP address is 172.27.46.118, port is 8080 ,I have set them as default in the code. However, please change it to your url and port when running the code in CLI
 
-```
-base_url = "http://172.27.46.118:8080/ga4gh/drs/v1/objects"
-base_info_url = "http://172.27.46.118:8080/ga4gh/drs/v1/service-info"
-```
 
 For different versions of Ubuntu, you might face version or port mapping issues, which can be resolved as follows:
  - Modify the base image in the Dockerfile, updating the image tag from 20201114 to a newer version:
@@ -49,21 +45,21 @@ Consequently, the base URL would change to
 
 4. Once the server is up and running, you can start using the app. For ease of testing, follow these steps: 
 
-(1) post call: `python3 app.py post` (this call will return a drs object id, e.g. 12345)
+(1) post call: ` python3 drs.py --url 172.28.73.102 post` (this call will return a drs object id, e.g. `12345`)
 
-(2) get call: `python3 app.py get --id 12345` (you can find the access id from this call, e.g. 0000)
+(2) get call: `python3 drs.py --url 172.28.73.102 get --expand false 12345` (`1234` is the obj id, you can find the access id from this call, e.g. 0000; --expand false is an option)
 
-(3) access call: `python3 app.py access --id 12345, --access_id 0000` (this will return an access url)
+(3) access call: `python3 drs.py --url 172.28.73.102 access 1234 0000` (`1234` is the obj id, `0000` is the obj's access id. This will return an access url)
 
-(4)put call: `python3 app.py put --id 1234 --(any argument you would like to update)`
+(4)put call: `python3 drs.py --url 172.28.73.102 put 1234 --updated-time "2024-04-16T18:56:55.077Z"` ( `1234` is the obj id, this function can be used to modify any option's content, for example the date and time)
 
-(5) delete call:`python3 app.py delete --id 1234`
+(5) delete call:`python3 drs.py --url 172.28.73.102 delete qUZcY.`
 
-(6) delete_access call: `python3 app.py delete --id 1234 --access_id 0000` (Note: this call does not work on the server side)
+(6) delete_access call: `python3 drs.py --url 172.28.73.102 delete_access_id 1234 0000` (Note: this call does not work on the server side)
 
-(7) post_service_info: `python3 app.py post_service_info --description your info`
+(7) post_service_info: `python3 drs.py --url 172.28.73.102 post_info --description "This service provides..."`
 
-(8) get_service_info: `python3 app.py get_service_info`
+(8) get_service_info: `python3 drs.py --url 172.28.73.102 get_info`
 
 ## Usage 
 Below is a description of all the actions available in the command-line client:
