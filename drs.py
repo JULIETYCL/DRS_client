@@ -1,13 +1,20 @@
 import click
 import json
 import requests
-import subprocess
+
 
 @click.group()
+@click.option("--url", default = "172.20.144.25", help = "Input server url")
+@click.option("--port", default = "8080", help = "Input server port")
 @click.pass_context
-def cli(ctx):
+def cli(ctx, url, port):
     """These are the commands for managing items"""
-    ctx.ensure_object(dict)
+    ctx.obj = {"url":url, "port":port}
+    if url:
+        click.echo(f"Connecting to server:{url}")
+    if port:
+        click.echo(f"Connecting to port:{port}")
+
 
 @cli.command("post")
 @click.pass_context
@@ -75,7 +82,9 @@ def post( ctx,
 
     headers = {"Content-Type": "application/json"}
 
-    base_url = ctx.obj["BASE_URL"]
+    url = ctx.obj["url"]
+    port = ctx.obj["port"]
+    base_url = f"http://{url}:{port}/ga4gh/drs/v1/objects"
     response = requests.post(base_url, data=json.dumps(drs_object_register), headers=headers)
     if response.status_code == 200:
         click.secho("DrsObjectRegister created successfully!", fg = "red")
@@ -91,7 +100,9 @@ def post( ctx,
 @click.argument("id")
 def get(ctx, id, expand):
     """Get an item"""
-    base_url = ctx.obj["BASE_URL"]
+    url = ctx.obj["url"]
+    port = ctx.obj["port"]
+    base_url = f"http://{url}:{port}/ga4gh/drs/v1/objects"
     response = requests.get(f"{base_url}/{id}?expand={expand}")
     if response.status_code == 200:
         drs_object = response.json()
@@ -106,7 +117,9 @@ def get(ctx, id, expand):
 @click.argument("id")
 def delete(ctx, id):
     """Delete an item"""
-    base_url= ctx.obj["BASE_URL"]
+    url= ctx.obj["url"]
+    port= ctx.obj["port"]
+    base_url = f"http://{url}:{port}/ga4gh/drs/v1/objects"
     response = requests.delete(f"{base_url}/{id}")
     if response.status_code == 200:
         click.secho("drs object is deleted",fg = "red")
@@ -180,7 +193,11 @@ def put(ctx,
 
     headers = {"Content-Type": "application/json"}
 
-    base_url = ctx.obj["BASE_URL"]
+    url = ctx.obj["url"]
+
+    port = ctx.obj["port"]
+
+    base_url=  f"http://{url}:{port}/ga4gh/drs/v1/objects"
 
     response = requests.put(f"{base_url}/{id}", data=json.dumps(drs_object_register), headers=headers)
 
@@ -198,7 +215,9 @@ def put(ctx,
 @click.argument("access_id", type=str)
 def access(ctx, id, access_id):
     """access the URL that can be used to fetch the bytes of a DrsObject"""
-    base_url = ctx.obj["BASE_URL"]
+    url = ctx.obj["url"]
+    port = ctx.obj["port"]
+    base_url = f"http://{url}:{port}/ga4gh/drs/v1/objects"
     response = requests.get(f"{base_url}/{id}/access/{access_id}")
     if response.status_code == 200:
         obj_url = response.json()
@@ -208,14 +227,15 @@ def access(ctx, id, access_id):
 
 @cli.command("post_info")
 @click.pass_context
-@click.option("--contactURL", default="mailto:support@example.com", help="Contact URL")
-@click.option("--createdAt", default="2019-06-04T12:58:19Z", help="Created At")
+# @click.option("--contactURL", default="mailto:support@example.com", help="Contact URL")
+# @click.option("--createdAt", default="2019-06-04T12:58:19Z", help="Created At")
 @click.option("--description", default="This service provides...")
-def post_info(ctx, contactURL, createdAt, description):
+#  contactURL, createdAt,
+def post_info(ctx, description):
     """post service information"""
     service_info = {
-        "contactUrl": contactURL,
-        "createdAt": createdAt,
+        # "contactUrl": contactURL,
+        # "createdAt": createdAt,
         "description": description,
         "documentationUrl": "https://docs.myservice.example.com",
         "environment": "test",
@@ -229,7 +249,11 @@ def post_info(ctx, contactURL, createdAt, description):
 
     headers = {"Content-Type": "application/json"}
 
-    base_info_url = ctx.obj["BASE_INFO_URL"]
+    url = ctx.obj["url"]
+
+    port = ctx.obj["port"]
+    
+    base_info_url = f"http://{url}:{port}/ga4gh/drs/v1/service-info"
 
     response = requests.post(base_info_url, data=json.dumps(service_info), headers=headers)
 
@@ -244,7 +268,9 @@ def post_info(ctx, contactURL, createdAt, description):
 @click.pass_context
 def get_info(ctx):
     """Get service information"""
-    base_info_url = ctx.obj["BASE_INFO_URL"]
+    url = ctx.obj["url"]
+    port = ctx.obj["port"]
+    base_info_url = f"http://{url}:{port}/ga4gh/drs/v1/service-info"
     response = requests.get(base_info_url)
     if response.status_code == 200:
         drs_object = response.json()
@@ -258,7 +284,9 @@ def get_info(ctx):
 @click.argument("access_id", type=str)
 def delete_access_id(ctx, id, access_id):
     """Delete existing AccessMethod of DrsObject"""
-    base_url = ctx.obj["BASE_URL"]
+    url = ctx.obj["url"]
+    port = ctx.obj["port"]
+    base_url = f"http://{url}:{port}/ga4gh/drs/v1/objects" 
     response = requests.delete(f"{base_url}/{id}/access/{access_id}")
     if response.status_code == 200:
         drs_response = response.json()
@@ -270,20 +298,16 @@ def delete_access_id(ctx, id, access_id):
         return drs_response
 
 
-    
 
 
-def main():
-    command = "ip addr show eth0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}'"
-    result = subprocess.run(command, shell=True, capture_output=True, text=True)
-    ip_address = result.stdout.strip()
-    port = "8080"
-    ctx = click.Context(cli,obj={})
-    base_url = f"http://{ip_address}:{port}/ga4gh/drs/v1/objects"
-    base_info_url = f"http://{ip_address}:{port}/ga4gh/drs/v1/service-info"
-    ctx.obj["BASE_URL"] = base_url
-    ctx.obj["BASE_INFO_URL"] = base_info_url
-    cli(obj=ctx.obj)
- 
-if __name__ == '__main__':
-   main()
+cli.add_command(post)
+cli.add_command(get)
+cli.add_command(access)
+cli.add_command(put)
+cli.add_command(post_info)
+cli.add_command(get_info)
+cli.add_command(delete)
+cli.add_command(delete_access_id)
+
+if __name__ == "__main__":
+    cli()

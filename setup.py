@@ -4,6 +4,6 @@ setup(
     name="drs",
     version="0.1",
     py_modules=["drs"],
-    install_requires=["Click", "requests", "subprocess"],
-    entry_points={"console_scripts": ["drs = drs:main"]},
+    install_requires=["Click", "requests"],
+    entry_points={"console_scripts": ["drs = drs:cli"]},
 )
