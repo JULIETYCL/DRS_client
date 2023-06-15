@@ -1,7 +1,7 @@
 import json
-
 import click
 import requests
+from crypt4gh.keys.c4gh import generate
 
 
 @click.group()
@@ -299,6 +299,24 @@ def delete_access_id(ctx, id, access_id):
         drs_response = response.json()
         click.secho("action is not successful, 400", fg="red")
         return drs_response
+
+@cli.command("crypt4gh-keygen")
+@click.pass_context
+@click.option("--sk", default="alice.sec", help="Input file name for the secret key")
+@click.option("--pk", default="alice.pub", help="Input file name for the public key")
+@click.option("--passphrase", default="my_passphrase", help="The passphrase to encrypt the private key. If not provided, the private key will be saved without encryption.")
+@click.option("--comment", default="my_comment", help="A comment to include in the generated keys")
+def generate_keypair(ctx, sk, pk, passphrase, comment):
+    private_key, public_key = generate(sk, pk, passphrase, comment)
+
+    with open(private_key, "r") as private_file:
+        private_key_content = private_file.read()
+        click.echo(f"Private Key: {private_key_content}")
+
+    with open(public_key, "r") as public_file:
+        public_key_content = public_file.read()
+        click.echo(f"Public Key: {public_key_content}")
+
 
 
 cli.add_command(post)
