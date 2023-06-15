@@ -82,7 +82,7 @@ Below is a description of all the actions available in the command-line client:
 
 `get_service_info` - A successful operation to request the service information about this running service.
 
-`decrypt_file` - decrypt an crypt4gh encrypted file
+`decrypt_file` - decrypt an crypt4gh encrypted file.
 
 The development is ongoing, with more functions and features being added. Therefore, this README is also a work in progress. 
 
