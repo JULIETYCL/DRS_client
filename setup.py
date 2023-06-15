@@ -1,6 +1,6 @@
 from setuptools import setup
 
-setup(  
+setup(
     name="drs",
     version="0.1",
     py_modules=["drs"],
