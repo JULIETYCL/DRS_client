@@ -4,12 +4,12 @@ import requests
 
 
 @click.group()
-@click.option("--url", default = "172.20.144.25", help = "Input server url")
-@click.option("--port", default = "8080", help = "Input server port")
+@click.option("--url", default="172.20.144.25", help="Input server url")
+@click.option("--port", default="8080", help="Input server port")
 @click.pass_context
 def cli(ctx, url, port):
     """These are the commands for managing items"""
-    ctx.obj = {"url":url, "port":port}
+    ctx.obj = {"url": url, "port": port}
     if url:
         click.echo(f"Connecting to server:{url}")
     if port:
@@ -40,24 +40,23 @@ def cli(ctx, url, port):
 @click.option("--size", default=0, help="Size")
 @click.option("--updated-time", default="2023-04-16T18:56:55.077Z", help="Updated Time")
 @click.option("--version", default="string", help="Version")
-def post( ctx,
-    access_url_headers,
-    access_url,
-    access_type,
-    aliases,
-    checksum,
-    checksum_type,
-    drs_uri,
-    contents_id,
-    contents_name,
-    created_time,
-    description,
-    mime_type,
-    name,
-    size,
-    updated_time,
-    version,
-):
+def post(ctx,
+         access_url_headers,
+         access_url,
+         access_type,
+         aliases,
+         checksum,
+         checksum_type,
+         drs_uri,
+         contents_id,
+         contents_name,
+         created_time,
+         description,
+         mime_type,
+         name,
+         size,
+         updated_time,
+         version):
     """Post an item"""
     print("Script is running")
     drs_object_register = {
@@ -87,10 +86,10 @@ def post( ctx,
     base_url = f"http://{url}:{port}/ga4gh/drs/v1/objects"
     response = requests.post(base_url, data=json.dumps(drs_object_register), headers=headers)
     if response.status_code == 200:
-        click.secho("DrsObjectRegister created successfully!", fg = "red")
+        click.secho("DrsObjectRegister created successfully!", fg="red")
         res = click.echo(json.loads(response.text))
     else:
-        res = click.secho(f"Error: {response.status_code} - {response.text}", fg = "red")
+        res = click.secho(f"Error: {response.status_code} - {response.text}", fg="red")
     return res
 
 
@@ -107,8 +106,8 @@ def get(ctx, id, expand):
     if response.status_code == 200:
         drs_object = response.json()
         for key, value in drs_object.items():
-            click.secho(f'{key}:', fg = 'green',nl = False)
-            click.secho(f'{value}',fg = 'yellow')
+            click.secho(f'{key}:', fg='green', nl=False)
+            click.secho(f'{value}', fg='yellow')
         return drs_object
 
 
@@ -117,14 +116,14 @@ def get(ctx, id, expand):
 @click.argument("id")
 def delete(ctx, id):
     """Delete an item"""
-    url= ctx.obj["url"]
-    port= ctx.obj["port"]
+    url = ctx.obj["url"]
+    port = ctx.obj["port"]
     base_url = f"http://{url}:{port}/ga4gh/drs/v1/objects"
     response = requests.delete(f"{base_url}/{id}")
     if response.status_code == 200:
-        click.secho("drs object is deleted",fg = "red")
+        click.secho("drs object is deleted", fg="red")
         drs_object = response.json()
-        click.secho(f'{drs_object}',fg ="white")
+        click.secho(f'{drs_object}', fg="white")
         return drs_object
 
 
@@ -153,23 +152,22 @@ def delete(ctx, id):
 @click.option("--version", default="string", help="Version")
 @click.argument("id")
 def put(ctx,
-    id,
-    access_url_headers,
-    access_url,
-    access_type,
-    aliases,
-    checksum,
-    checksum_type,
-    drs_uri,
-    contents_name,
-    created_time,
-    description,
-    mime_type,
-    name,
-    size,
-    updated_time,
-    version,
-):
+        id,
+        access_url_headers,
+        access_url,
+        access_type,
+        aliases,
+        checksum,
+        checksum_type,
+        drs_uri,
+        contents_name,
+        created_time,
+        description,
+        mime_type,
+        name,
+        size,
+        updated_time,
+        version):
     """Update an item"""
     drs_object_register = {
         "access_methods": [
@@ -197,15 +195,15 @@ def put(ctx,
 
     port = ctx.obj["port"]
 
-    base_url=  f"http://{url}:{port}/ga4gh/drs/v1/objects"
+    base_url = f"http://{url}:{port}/ga4gh/drs/v1/objects"
 
     response = requests.put(f"{base_url}/{id}", data=json.dumps(drs_object_register), headers=headers)
 
     if response.status_code == 200:
-        click.secho("DrsObject is updated successfully!",fg ="green")
+        click.secho("DrsObject is updated successfully!", fg="green")
         res = click.echo(json.loads(response.text))
     else:
-        res = click.secho(f"Error: {response.status_code} - {response.text}", fg = "red")
+        res = click.secho(f"Error: {response.status_code} - {response.text}", fg="red")
     return res
 
 
@@ -221,7 +219,7 @@ def access(ctx, id, access_id):
     response = requests.get(f"{base_url}/{id}/access/{access_id}")
     if response.status_code == 200:
         obj_url = response.json()
-        click.secho(f'{obj_url}', fg = "yellow")
+        click.secho(f'{obj_url}', fg="yellow")
         return obj_url
 
 
@@ -252,15 +250,15 @@ def post_info(ctx, description):
     url = ctx.obj["url"]
 
     port = ctx.obj["port"]
-    
+
     base_info_url = f"http://{url}:{port}/ga4gh/drs/v1/service-info"
 
     response = requests.post(base_info_url, data=json.dumps(service_info), headers=headers)
 
     if response.status_code == 201:
-        res = click.secho("Service information created successfully!", fg = "green")
+        res = click.secho("Service information created successfully!", fg="green")
     else:
-        res = click.secho(f"Error: {response.status_code} - {response.text}", fg = "red")
+        res = click.secho(f"Error: {response.status_code} - {response.text}", fg="red")
     return res
 
 
@@ -286,18 +284,16 @@ def delete_access_id(ctx, id, access_id):
     """Delete existing AccessMethod of DrsObject"""
     url = ctx.obj["url"]
     port = ctx.obj["port"]
-    base_url = f"http://{url}:{port}/ga4gh/drs/v1/objects" 
+    base_url = f"http://{url}:{port}/ga4gh/drs/v1/objects"
     response = requests.delete(f"{base_url}/{id}/access/{access_id}")
     if response.status_code == 200:
         drs_response = response.json()
-        click.secho("drs object and access is deleted", fg = "red")
+        click.secho("drs object and access is deleted", fg="red")
         return drs_response
     elif response.status_code in [400, 401, 403, 404, 500]:
         drs_response = response.json()
-        click.secho("action is not successful, 400", fg = "red")
+        click.secho("action is not successful, 400", fg="red")
         return drs_response
-
-
 
 
 cli.add_command(post)
