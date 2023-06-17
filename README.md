@@ -61,6 +61,8 @@ Consequently, the base URL would change to
 
 (8) get_service_info: `python3 drs.py --url 172.28.73.102 get_info`
 
+(9) decript_file: `cat message.c4gh | python3 drs.py decrypt_file --sk /your/file's/absolute/path/yourfile.sec --sender_pk /your/file's/absolute/path/yourfile.pub --range 0-10 > decrypted_file.txt` (message.c4gh is a encrypted file by crypt4gh,  /your/file's/absolute/path/yourfile.pub is the absolute path of your private key/public key, Range of bytes to decrypt in the format 'start-end')
+
 ## Usage 
 Below is a description of all the actions available in the command-line client:
 
@@ -79,6 +81,8 @@ Below is a description of all the actions available in the command-line client:
 `post_service_info` - Delete existing AccessMethod of DrsObject.
 
 `get_service_info` - A successful operation to request the service information about this running service.
+
+`decrypt_file` - decrypt an crypt4gh encrypted file.
 
 The development is ongoing, with more functions and features being added. Therefore, this README is also a work in progress. 
 

@@ -1,6 +1,7 @@
 import click
 import json
 import requests
+from crypt4gh.cli import decrypt
 
 
 @click.group()
@@ -295,6 +296,31 @@ def delete_access_id(ctx, id, access_id):
         click.secho("action is not successful, 400", fg="red")
         return drs_response
 
+@cli.command("decrypt_file")
+@click.pass_context
+@click.option("--sk", type=str, help="Private key file path")
+@click.option("--sender_pk", type=str, help="Path to the sender's public key file")
+@click.option("--range", type=str, help="Range of bytes to decrypt in the format 'start-end'")
+def decrypt_file(ctx, sk, sender_pk, range):
+    """Decrypt a file"""
+    if not sk:
+        click.secho("Error: Please provide a private key file path.", fg="red")
+        return
+    try:
+        args = {
+            "decrypt": True,
+            "--sender_pk": sender_pk,
+            "--range": range,
+            "--sk": sk
+        }
+        
+        decrypt(args)
+
+        click.secho("File decrypted successfully!", fg="green")
+        
+    except Exception as e:
+        click.secho(f"Error: {str(e)}", fg="red")
+
 
 cli.add_command(post)
 cli.add_command(get)
@@ -304,6 +330,7 @@ cli.add_command(post_info)
 cli.add_command(get_info)
 cli.add_command(delete)
 cli.add_command(delete_access_id)
+cli.add_command(decrypt_file)
 
 if __name__ == "__main__":
     cli()
