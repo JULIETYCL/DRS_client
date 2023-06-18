@@ -296,6 +296,7 @@ def delete_access_id(ctx, id, access_id):
         click.secho("action is not successful, 400", fg="red")
         return drs_response
 
+
 @cli.command("decrypt_file")
 @click.pass_context
 @click.option("--sk", type=str, help="Private key file path")
@@ -313,11 +314,11 @@ def decrypt_file(ctx, sk, sender_pk, range):
             "--range": range,
             "--sk": sk
         }
-        
+
         decrypt(args)
 
         click.secho("File decrypted successfully!", fg="green")
-        
+
     except Exception as e:
         click.secho(f"Error: {str(e)}", fg="red")
 
