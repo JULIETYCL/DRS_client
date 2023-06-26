@@ -1,5 +1,6 @@
-import click
 import json
+
+import click
 import requests
 from crypt4gh.cli import decrypt
 
@@ -41,23 +42,25 @@ def cli(ctx, url, port):
 @click.option("--size", default=0, help="Size")
 @click.option("--updated-time", default="2023-04-16T18:56:55.077Z", help="Updated Time")
 @click.option("--version", default="string", help="Version")
-def post(ctx,
-         access_url_headers,
-         access_url,
-         access_type,
-         aliases,
-         checksum,
-         checksum_type,
-         drs_uri,
-         contents_id,
-         contents_name,
-         created_time,
-         description,
-         mime_type,
-         name,
-         size,
-         updated_time,
-         version):
+def post(
+    ctx,
+    access_url_headers,
+    access_url,
+    access_type,
+    aliases,
+    checksum,
+    checksum_type,
+    drs_uri,
+    contents_id,
+    contents_name,
+    created_time,
+    description,
+    mime_type,
+    name,
+    size,
+    updated_time,
+    version,
+):
     """Post an item"""
     print("Script is running")
     drs_object_register = {
@@ -107,8 +110,8 @@ def get(ctx, id, expand):
     if response.status_code == 200:
         drs_object = response.json()
         for key, value in drs_object.items():
-            click.secho(f'{key}:', fg='green', nl=False)
-            click.secho(f'{value}', fg='yellow')
+            click.secho(f"{key}:", fg="green", nl=False)
+            click.secho(f"{value}", fg="yellow")
         return drs_object
 
 
@@ -124,7 +127,7 @@ def delete(ctx, id):
     if response.status_code == 200:
         click.secho("drs object is deleted", fg="red")
         drs_object = response.json()
-        click.secho(f'{drs_object}', fg="white")
+        click.secho(f"{drs_object}", fg="white")
         return drs_object
 
 
@@ -152,23 +155,25 @@ def delete(ctx, id):
 @click.option("--updated-time", default="2023-04-16T18:56:55.077Z", help="Updated Time")
 @click.option("--version", default="string", help="Version")
 @click.argument("id")
-def put(ctx,
-        id,
-        access_url_headers,
-        access_url,
-        access_type,
-        aliases,
-        checksum,
-        checksum_type,
-        drs_uri,
-        contents_name,
-        created_time,
-        description,
-        mime_type,
-        name,
-        size,
-        updated_time,
-        version):
+def put(
+    ctx,
+    id,
+    access_url_headers,
+    access_url,
+    access_type,
+    aliases,
+    checksum,
+    checksum_type,
+    drs_uri,
+    contents_name,
+    created_time,
+    description,
+    mime_type,
+    name,
+    size,
+    updated_time,
+    version,
+):
     """Update an item"""
     drs_object_register = {
         "access_methods": [
@@ -220,7 +225,7 @@ def access(ctx, id, access_id):
     response = requests.get(f"{base_url}/{id}/access/{access_id}")
     if response.status_code == 200:
         obj_url = response.json()
-        click.secho(f'{obj_url}', fg="yellow")
+        click.secho(f"{obj_url}", fg="yellow")
         return obj_url
 
 
@@ -296,6 +301,7 @@ def delete_access_id(ctx, id, access_id):
         click.secho("action is not successful, 400", fg="red")
         return drs_response
 
+
 @cli.command("decrypt_file")
 @click.pass_context
 @click.option("--sk", type=str, help="Private key file path")
@@ -313,11 +319,11 @@ def decrypt_file(ctx, sk, sender_pk, range):
             "--range": range,
             "--sk": sk
         }
-        
+
         decrypt(args)
 
         click.secho("File decrypted successfully!", fg="green")
-        
+
     except Exception as e:
         click.secho(f"Error: {str(e)}", fg="red")
 
