@@ -6,4 +6,5 @@ idna==3.4
 requests==2.30.0
 urllib3==2.0.2
 crypt4gh==1.1.1
+jsonschema==3.2.0
 
