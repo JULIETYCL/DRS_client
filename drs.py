@@ -5,7 +5,7 @@ from crypt4gh.cli import decrypt
 
 
 @click.group()
-@click.option("--url", default="172.20.144.25", help="Input server url")
+@click.option("--url", default="172.29.88.59", help="Input server url")
 @click.option("--port", default="8080", help="Input server port")
 @click.pass_context
 def cli(ctx, url, port):
@@ -58,7 +58,53 @@ def post(ctx,
          size,
          updated_time,
          version):
+    
     """Post an item"""
+    url = ctx.obj["url"]
+    port = ctx.obj["port"]
+
+    res = post_function(
+         url,
+         port,
+         access_url_headers,
+         access_url,
+         access_type,
+         aliases,
+         checksum,
+         checksum_type,
+         drs_uri,
+         contents_id,
+         contents_name,
+         created_time,
+         description,
+         mime_type,
+         name,
+         size,
+         updated_time,
+         version)
+    
+    return res
+
+
+def post_function(url,
+         port,
+         access_url_headers,
+         access_url,
+         access_type,
+         aliases,
+         checksum,
+         checksum_type,
+         drs_uri,
+         contents_id,
+         contents_name,
+         created_time,
+         description,
+         mime_type,
+         name,
+         size,
+         updated_time,
+         version):
+    
     print("Script is running")
     drs_object_register = {
         "access_methods": [
@@ -81,18 +127,17 @@ def post(ctx,
     }
 
     headers = {"Content-Type": "application/json"}
-
-    url = ctx.obj["url"]
-    port = ctx.obj["port"]
     base_url = f"http://{url}:{port}/ga4gh/drs/v1/objects"
     response = requests.post(base_url, data=json.dumps(drs_object_register), headers=headers)
     if response.status_code == 200:
         click.secho("DrsObjectRegister created successfully!", fg="red")
-        res = click.echo(json.loads(response.text))
+        res = str(json.loads(response.text))
+        click.echo(res)
     else:
-        res = click.secho(f"Error: {response.status_code} - {response.text}", fg="red")
+        res = f"Error: {response.status_code} - {response.text}"
+        click.secho(res, fg="red")
     return res
-
+    
 
 @cli.command("get")
 @click.pass_context
@@ -102,14 +147,20 @@ def get(ctx, id, expand):
     """Get an item"""
     url = ctx.obj["url"]
     port = ctx.obj["port"]
+    get_function(url, port, id, expand)
+    
+
+def get_function(url, port, id, expand):
     base_url = f"http://{url}:{port}/ga4gh/drs/v1/objects"
     response = requests.get(f"{base_url}/{id}?expand={expand}")
     if response.status_code == 200:
         drs_object = response.json()
+        # print(drs_object)
         for key, value in drs_object.items():
             click.secho(f'{key}:', fg='green', nl=False)
             click.secho(f'{value}', fg='yellow')
         return drs_object
+
 
 
 @cli.command("delete")
@@ -119,6 +170,9 @@ def delete(ctx, id):
     """Delete an item"""
     url = ctx.obj["url"]
     port = ctx.obj["port"]
+    delete_function(url,port,id)
+
+def delete_function(url,port,id):
     base_url = f"http://{url}:{port}/ga4gh/drs/v1/objects"
     response = requests.delete(f"{base_url}/{id}")
     if response.status_code == 200:
@@ -170,6 +224,47 @@ def put(ctx,
         updated_time,
         version):
     """Update an item"""
+    url = ctx.obj["url"]
+    port = ctx.obj["port"]
+
+    put_function(url,
+        port,
+        id,
+        access_url_headers,
+        access_url,
+        access_type,
+        aliases,
+        checksum,
+        checksum_type,
+        drs_uri,
+        contents_name,
+        created_time,
+        description,
+        mime_type,
+        name,
+        size,
+        updated_time,
+        version)
+
+def put_function(url,
+        port,
+        id,
+        access_url_headers,
+        access_url,
+        access_type,
+        aliases,
+        checksum,
+        checksum_type,
+        drs_uri,
+        contents_name,
+        created_time,
+        description,
+        mime_type,
+        name,
+        size,
+        updated_time,
+        version):
+
     drs_object_register = {
         "access_methods": [
             {
@@ -189,12 +284,8 @@ def put(ctx,
         "updated_time": updated_time,
         "version": version,
     }
-
+        
     headers = {"Content-Type": "application/json"}
-
-    url = ctx.obj["url"]
-
-    port = ctx.obj["port"]
 
     base_url = f"http://{url}:{port}/ga4gh/drs/v1/objects"
 
@@ -202,9 +293,11 @@ def put(ctx,
 
     if response.status_code == 200:
         click.secho("DrsObject is updated successfully!", fg="green")
-        res = click.echo(json.loads(response.text))
+        res = str(json.loads(response.text))
+        click.echo(res)
     else:
-        res = click.secho(f"Error: {response.status_code} - {response.text}", fg="red")
+        res = f"Error: {response.status_code} - {response.text}"
+        click.secho(res, fg="red")
     return res
 
 
@@ -216,6 +309,10 @@ def access(ctx, id, access_id):
     """access the URL that can be used to fetch the bytes of a DrsObject"""
     url = ctx.obj["url"]
     port = ctx.obj["port"]
+    access_function(url, port, id, access_id)
+
+
+def access_function(url, port, id, access_id):
     base_url = f"http://{url}:{port}/ga4gh/drs/v1/objects"
     response = requests.get(f"{base_url}/{id}/access/{access_id}")
     if response.status_code == 200:
@@ -232,6 +329,11 @@ def access(ctx, id, access_id):
 #  contactURL, createdAt,
 def post_info(ctx, description):
     """post service information"""
+    url = ctx.obj["url"]
+    port = ctx.obj["port"]
+    post_info_function(url, port, description)
+
+def post_info_function(url, port, description):
     service_info = {
         # "contactUrl": contactURL,
         # "createdAt": createdAt,
@@ -247,21 +349,16 @@ def post_info(ctx, description):
     }
 
     headers = {"Content-Type": "application/json"}
-
-    url = ctx.obj["url"]
-
-    port = ctx.obj["port"]
-
     base_info_url = f"http://{url}:{port}/ga4gh/drs/v1/service-info"
 
     response = requests.post(base_info_url, data=json.dumps(service_info), headers=headers)
 
     if response.status_code == 201:
-        res = click.secho("Service information created successfully!", fg="green")
+        click.secho("Service information created successfully!")
+        return response.status_code
     else:
-        res = click.secho(f"Error: {response.status_code} - {response.text}", fg="red")
-    return res
-
+        click.secho(f"Error: {response.status_code} - {response.text}")
+        return response.status_code
 
 @cli.command("get_info")
 @click.pass_context
@@ -269,6 +366,10 @@ def get_info(ctx):
     """Get service information"""
     url = ctx.obj["url"]
     port = ctx.obj["port"]
+    get_info_function(url, port)
+
+
+def get_info_function(url, port):
     base_info_url = f"http://{url}:{port}/ga4gh/drs/v1/service-info"
     response = requests.get(base_info_url)
     if response.status_code == 200:
@@ -285,16 +386,20 @@ def delete_access_id(ctx, id, access_id):
     """Delete existing AccessMethod of DrsObject"""
     url = ctx.obj["url"]
     port = ctx.obj["port"]
+    delete_access_id_function(url, port, id, access_id)
+
+def delete_access_id_function(url, port, id, access_id):
     base_url = f"http://{url}:{port}/ga4gh/drs/v1/objects"
     response = requests.delete(f"{base_url}/{id}/access/{access_id}")
     if response.status_code == 200:
         drs_response = response.json()
         click.secho("drs object and access is deleted", fg="red")
-        return drs_response
+        return response.status_code
     elif response.status_code in [400, 401, 403, 404, 500]:
         drs_response = response.json()
         click.secho("action is not successful, 400", fg="red")
-        return drs_response
+        return response.status_code
+
 
 @cli.command("decrypt_file")
 @click.pass_context
@@ -303,6 +408,9 @@ def delete_access_id(ctx, id, access_id):
 @click.option("--range", type=str, help="Range of bytes to decrypt in the format 'start-end'")
 def decrypt_file(ctx, sk, sender_pk, range):
     """Decrypt a file"""
+    decrypt_file_function(ctx, sk, sender_pk, range)
+
+def decrypt_file_function(ctx, sk, sender_pk, range):
     if not sk:
         click.secho("Error: Please provide a private key file path.", fg="red")
         return
@@ -313,11 +421,11 @@ def decrypt_file(ctx, sk, sender_pk, range):
             "--range": range,
             "--sk": sk
         }
-        
+
         decrypt(args)
 
         click.secho("File decrypted successfully!", fg="green")
-        
+
     except Exception as e:
         click.secho(f"Error: {str(e)}", fg="red")
 
